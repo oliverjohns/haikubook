@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
 import {
@@ -5,7 +7,7 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
+import LinkedInProvider from "next-auth/providers/linkedin";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -48,9 +50,19 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db),
   providers: [
-    GithubProvider({
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_CLIENT_SECRET,
+    LinkedInProvider({
+      clientId: env.LINKEDIN_CLIENT_ID,
+      clientSecret: env.LINKEDIN_CLIENT_SECRET,
+      authorization: { params: { scope: "profile email openid" } },
+      issuer: "https://www.linkedin.com",
+      jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
+      async profile(profile) {
+        return {
+          id: profile.sub,
+          name: String(profile.name).split(" ")?.[0],
+          email: profile.email,
+        };
+      },
     }),
     /**
      * ...add more providers here.
