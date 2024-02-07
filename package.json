@@ -6,6 +6,8 @@
   "scripts": {
     "build": "next build",
     "db:push": "prisma db push",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "dev": "next dev",
     "postinstall": "prisma generate",
