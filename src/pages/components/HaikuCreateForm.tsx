@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 
 export default function HaikuCreateForm() {
-  const { register, handleSubmit, reset } = useForm<{ content: string }>();
+  const { register, handleSubmit, reset, watch } = useForm<{ content: string }>();
   const utils = api.useUtils();
   const haikuMutation = api.haiku.create.useMutation();
 
@@ -29,7 +29,7 @@ export default function HaikuCreateForm() {
           htmlFor="content"
           className="block text-sm font-medium text-white"
         >
-          Write your Haiku...
+          Write your 3 line Haiku...
         </label>
         <div className="mt-1">
           <textarea
@@ -45,6 +45,7 @@ export default function HaikuCreateForm() {
       <div className="flex justify-center">
         <button
           type="submit"
+          disabled={watch('content')?.split('\n').length !== 3}
           className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
         >
           {"Post Haiku"}
